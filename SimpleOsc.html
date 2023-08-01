@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>simpleOSC ver/3.9.1/</title>
+    <link rel="icon" type="image/x-icon" href="icon/pixelwizard.png">
+    <!--neetjack-->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!--head-->
+    <div class="meta" id='allIn'>
+        <div class="head">
+            <h1>Simple O</h1>
+            <h6>-and it's really Simple :)</h6>
+            <h3>Choose Wavefrom</h3>
+        </div>
+
+        <div id="playDemo">
+            <button class="btn1" id="btnPlay" onclick="playDemo()">play test tone</button>
+        </div>
+
+        <div class="oscType">
+            <form>
+                <input type="radio" id="Sine" name="selectWave" value="sine" onclick="setOscSine()">
+                <label for="Sine">Sine</label>
+                <input type="radio" id="Square" name="selectWave" value="square" onclick="setOscSquare()">
+                <label for="Square">Square</label>
+                <input type="radio" id="Sawtooth" name="selectWave" value="sawtooth" onclick="setOscSawtooth()">
+                <label for="Sawtooth">Sawtooth</label>
+                <input type="radio" id="Triangle" name="selectWave" value="triangle" onclick="setOscTriangle()">
+                <label for="Triangle">Triangle</label>
+            </form>
+            <hr>
+            <p>MasterGain</p>
+            <p><span id='mgDisplay'>0.4</span></p>
+            <input class='masterGain' type='range' min='0' max='0.75' step='0.05' value='0.4'>
+        </div>
+        <hr>
+        <div class="EG">
+
+            <label for='egAtk'>ATK<span class='atkDisplay'>0</span>
+                <input class='egsAtk' type='range' min='0' max='0.5' step='0.01' value='0' name='egAtk'>
+            </label>
+            <br>
+            <label for='egDec'>DEC<span class='decDisplay'>0.1</span>
+                <input class='egsDec' type='range' min='0' max='1' step='0.05' value='0.1' name='egDec'>
+            </label>
+            <br>
+            <label for='egSus'>SUS<span class='susDisplay'>1</span>
+                <input class='egsSus' type='range' min='0' max='1' step='0.05' value='1' name='egSus'>
+            </label>
+            <br>
+            <label for='egRel'>REL<span class='relDisplay'>0.1</span>
+                <input class='egsRel' type='range' min='0' max='1' step='0.05' value='0.1' name='egRel'>
+            </label>
+            <br>
+        </div>
+        <hr>
+        <div class="svg">
+            <h6>If you have a MIDI keyboard</h6>
+            <h6>Please Plug it in or just use your computer keyboard</h6>
+            <ul class="set" id="keyboard">
+                <li class="white c1" value="72"></li>
+                <li class="black cs1" value="73"></li>
+                <li class="white d1" value="74"></li>
+                <li class="black ds1" value="75"></li>
+                <li class="white e1" value="76"></li>
+                <li class="white f1" value="77"></li>
+                <li class="black fs1" value="78"></li>
+                <li class="white g1" value="79"></li>
+                <li class="black gs1" value="80"></li>
+                <li class="white a1" value="81"></li>
+                <li class="black as1" value="82"></li>
+                <li class="white b1" value="83"></li>
+                <li class="white c2" value="84"></li>
+                <li class="black cs2" value="85"></li>
+                <li class="white d2" value="86"></li>
+                <li class="black ds2" value="87"></li>
+                <li class="white e2" value="88"></li>
+                <li class="white f2" value="89"></li>
+                <li class="black fs2" value="90"></li>
+                <li class="white g2" value="91"></li>
+                <li class="black gs2" value="92"></li>
+                <li class="white a2" value="93"></li>
+                <li class="black as2" value="94"></li>
+                <li class="white b2" value="95"></li>
+                <li class="white c3" value="96"></li>
+                <li class="black cs3" value="97"></li>
+                <li class="white d3" value="98"></li>
+                <li class="black ds3" value="99"></li>
+                <li class="white e3" value="100"></li>
+            </ul>
+        </div>
+    </div>
+    <script src="synth.js"></script>
+    <script src="midi.js"></script>
+    <script src="qwert.js"></script>
+    <script src="envelope.js"></script>
+    <script src="oscilloscope.js"></script>
+    <script src="playtone.js"></script>
+    <script src="keyboard.js"></script>
+    <div>
+        <p id="end">Design by Jiaqi Chen(MPF2019116) for Online Muaic APP Design&Development class Demo</p>
+    </div>
+</body>
+
+</html>
