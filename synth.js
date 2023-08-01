@@ -1,52 +1,149 @@
-//NEW AUDIO CTX
+//Create AUDIO CTX
+
 var AudioContext = window.AudioContext || window.webkittAudioContext;
 var audioCtx = new AudioContext({
     latencyHint: 'balanced',
     sampleRate: 48000,
 });
-//Neet Jack 2021
+
+//Neet Jack 2023
+
 const OSC1 = {};
-var Osc1Type = 'sine';
+const OSC2 = {};
+const OSC3 = {};
+const LFO  = {};
 
-//OSCTYPE
-function setOscSquare() {
-    Osc1Type = 'square';
-    console.log("now osc set to" + " " + Osc1Type);
+var Osc1_Type = 'sine';
+var Osc2_Type = 'sine';
+var Osc3_Type = 'sine';
+var LFO_Type  = 'sine';
+
+
+//OSCTYPE SELLECTOR
+
+// [SQUARE]
+function setOsc1Square() {
+    Osc1_Type = 'square';
+    console.log("now osc set to" + " " + Osc1_Type);
+};
+function setOsc2Square() {
+    Osc1_Type = 'square';
+    console.log("now osc set to" + " " + Osc2_Type);
+};
+function setOsc3Square() {
+    Osc1_Type = 'square';
+    console.log("now osc set to" + " " + Osc3_Type);
 };
 
-function setOscTriangle() {
-    Osc1Type = 'triangle';
-    console.log("now osc set to" + " " + Osc1Type)
+
+// [TRI]
+function setOsc1Triangle() {
+    Osc1_Type = 'triangle';
+    console.log("now osc set to" + " " + Osc1_Type)
+};
+function setOsc2Triangle() {
+    Osc1_Type = 'triangle';
+    console.log("now osc set to" + " " + Osc2_Type)
+};
+function setOsc3Triangle() {
+    Osc1_Type = 'triangle';
+    console.log("now osc set to" + " " + Osc3_Type)
 };
 
-function setOscSine() {
-    Osc1Type = 'sine';
-    console.log("now osc set to" + " " + Osc1Type)
+//[SINE]
+function setOsc1Sine() {
+    Osc1_Type = 'sine';
+    console.log("now osc set to" + " " + Osc1_Type)
+};
+function setOsc2Sine() {
+    Osc1_Type = 'sine';
+    console.log("now osc set to" + " " + Osc2_Type)
+};
+function setOsc3Sine() {
+    Osc1_Type = 'sine';
+    console.log("now osc set to" + " " + Osc3_Type)
 };
 
-function setOscSawtooth() {
-    Osc1Type = 'sawtooth';
-    console.log("now osc set to" + " " + Osc1Type)
+//[SAWtooth]
+function setOsc1Sawtooth() {
+    Osc1_Type = 'sawtooth';
+    console.log("now osc set to" + " " + Osc1_Type)
 };
+function setOsc2Sawtooth() {
+    Osc1_Type = 'sawtooth';
+    console.log("now osc set to" + " " + Osc2_Type)
+};
+function setOsc3Sawtooth() {
+    Osc1_Type = 'sawtooth';
+    console.log("now osc set to" + " " + Osc3_Type)
+};
+
 //LOW PASS FILTER
 
-//MASTER GAIN
+//GAIN STRUCTURE
 var masterGain = audioCtx.createGain();
 masterGain.gain.value = 0.4;
 
+var Osc1_Gain  = audioCtx.createGain();
+Osc1_Gain.gain.value  = 0.4;
+var Osc2_Gain  = audioCtx.createGain();
+Osc2_Gain.gain.value  = 0.4;
+var Osc3_Gain  = audioCtx.createGain();
+Osc3_Gain.gain.value  = 0.4;
 
 var master = document.querySelector('.masterGain');
-
 master.oninput = function() {
     changeMaster(master.value);
 }
-
 function changeMaster(vol) {
     masterGain.gain.value = vol;
     master.value = vol;
     document.getElementById("mgDisplay").innerHTML = vol;
     console.log('MasterGain is' + ' ' + masterGain.gain.value);
 }
+
+var Gain_1 = document.querySelector('.Gain_1')
+Gain_1.oninput = function(){
+    changeMaster(Gain_1.value);
+}
+function change_Gain_1(vol){
+    Osc1_Gain.gain.value = vol;
+    Gain_1.value = vol;
+    document.getElementById("g1Display").innerHTML = vol;
+    console.log('Gain_1 is' + ' ' + Osc1_Gain.gain.value);
+}
+
+var Gain_2 = document.querySelector('.Gain_2')
+Gain_2.oninput = function(){
+    changeMaster(Gain_2.value);
+}
+function change_Gain_2(vol){
+    Osc2_Gain.gain.value = vol;
+    Gain_2.value = vol;
+    document.getElementById("g2Display").innerHTML = vol;
+    console.log('Gain_2 is' + ' ' + Osc2_Gain.gain.value);
+}
+
+var Gain_3 = document.querySelector('.Gain_3')
+Gain_3.oninput = function(){
+    changeMaster(Gain_2.value);
+}
+function change_Gain_2(vol){
+    Osc3_Gain.gain.value = vol;
+    Gain_3.value = vol;
+    document.getElementById("g3Display").innerHTML = vol;
+    console.log('Gain_3 is' + ' ' + Osc3_Gain.gain.value);
+}
+
+//CONNECTION
+const Mixer = audioCtx.createChannelMerger(3);
+
+//connect(destinationNode: AudioNode, output?: number, input?: number): AudioNode;
+Osc1_Gain.connect(Mixer,0,0);
+Osc2_Gain.connect(Mixer,0,1);
+Osc3_Gain.connect(Mixer,0,3);
+
+Mixer.connect(masterGain);
 masterGain.connect(audioCtx.destination);
 
 //NOTE STATE
@@ -54,8 +151,8 @@ function playNote(note, velocity) {
     const osc1 = audioCtx.createOscillator();
     const osc1Gain = audioCtx.createGain();
 
-    oscGain.gain.value = 0.33;
-    osc1.type = Osc1Type;
+    osc1Gain.gain.value = 0.33;
+    osc1.type = Osc1_Type;
     osc1.frequency.value = midiToFreq(note);
 
     const velocityGainAmount = (1 / 127) * velocity;

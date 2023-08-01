@@ -1,2 +1,12 @@
 # SimpleOsc
-Test Project #1
+
+Update 1.0
+
+*Working
+
+Next step
+
+*3X OSC
+*Filters
+*Reverbs
+*UI fix
