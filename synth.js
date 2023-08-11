@@ -5,6 +5,7 @@ var audioCtx = new AudioContext({
     latencyHint: 'balanced',
     sampleRate: 48000,
 });
+var ST = audioCtx.destination;
 
 //Neet Jack 2023
 
@@ -18,79 +19,11 @@ var Osc2_Type = 'sine';
 var Osc3_Type = 'sine';
 var LFO_Type  = 'sine';
 
-
-//OSCTYPE SELLECTOR
-
-// [SQUARE]
-function setOsc1Square() {
-    Osc1_Type = 'square';
-    console.log("now osc set to" + " " + Osc1_Type);
-};
-function setOsc2Square() {
-    Osc1_Type = 'square';
-    console.log("now osc set to" + " " + Osc2_Type);
-};
-function setOsc3Square() {
-    Osc1_Type = 'square';
-    console.log("now osc set to" + " " + Osc3_Type);
-};
-
-
-// [TRI]
-function setOsc1Triangle() {
-    Osc1_Type = 'triangle';
-    console.log("now osc set to" + " " + Osc1_Type)
-};
-function setOsc2Triangle() {
-    Osc1_Type = 'triangle';
-    console.log("now osc set to" + " " + Osc2_Type)
-};
-function setOsc3Triangle() {
-    Osc1_Type = 'triangle';
-    console.log("now osc set to" + " " + Osc3_Type)
-};
-
-//[SINE]
-function setOsc1Sine() {
-    Osc1_Type = 'sine';
-    console.log("now osc set to" + " " + Osc1_Type)
-};
-function setOsc2Sine() {
-    Osc1_Type = 'sine';
-    console.log("now osc set to" + " " + Osc2_Type)
-};
-function setOsc3Sine() {
-    Osc1_Type = 'sine';
-    console.log("now osc set to" + " " + Osc3_Type)
-};
-
-//[SAWtooth]
-function setOsc1Sawtooth() {
-    Osc1_Type = 'sawtooth';
-    console.log("now osc set to" + " " + Osc1_Type)
-};
-function setOsc2Sawtooth() {
-    Osc1_Type = 'sawtooth';
-    console.log("now osc set to" + " " + Osc2_Type)
-};
-function setOsc3Sawtooth() {
-    Osc1_Type = 'sawtooth';
-    console.log("now osc set to" + " " + Osc3_Type)
-};
-
 //LOW PASS FILTER
 
-//GAIN STRUCTURE
+//Master
 var masterGain = audioCtx.createGain();
 masterGain.gain.value = 0.4;
-
-var Osc1_Gain  = audioCtx.createGain();
-Osc1_Gain.gain.value  = 0.4;
-var Osc2_Gain  = audioCtx.createGain();
-Osc2_Gain.gain.value  = 0.4;
-var Osc3_Gain  = audioCtx.createGain();
-Osc3_Gain.gain.value  = 0.4;
-
 var master = document.querySelector('.masterGain');
 master.oninput = function() {
     changeMaster(master.value);
@@ -101,6 +34,16 @@ function changeMaster(vol) {
     document.getElementById("mgDisplay").innerHTML = vol;
     console.log('MasterGain is' + ' ' + masterGain.gain.value);
 }
+masterGain.connect(ST);
+
+/*
+
+var Osc1_Gain  = audioCtx.createGain();
+Osc1_Gain.gain.value  = 0.4;
+var Osc2_Gain  = audioCtx.createGain();
+Osc2_Gain.gain.value  = 0.4;
+var Osc3_Gain  = audioCtx.createGain();
+Osc3_Gain.gain.value  = 0.4;
 
 var Gain_1 = document.querySelector('.Gain_1')
 Gain_1.oninput = function(){
@@ -144,32 +87,80 @@ Osc2_Gain.connect(Mixer,0,1);
 Osc3_Gain.connect(Mixer,0,3);
 
 Mixer.connect(masterGain);
-masterGain.connect(audioCtx.destination);
+masterGain.connect(ST);
+*/
 
 //NOTE STATE
 function playNote(note, velocity) {
+  
+    var now = audioCtx.currentTime;
+
+    // OSC1
     const osc1 = audioCtx.createOscillator();
     const osc1Gain = audioCtx.createGain();
-
-    osc1Gain.gain.value = 0.33;
+    osc1Gain.gain.linearRampToValueAtTime(0.15,now+0.07);
     osc1.type = Osc1_Type;
     osc1.frequency.value = midiToFreq(note);
 
-    const velocityGainAmount = (1 / 127) * velocity;
-    const velocityGain = audioCtx.createGain();
-    velocityGain.gain.value = velocityGainAmount;
+    // OSC2
+    const osc2 = audioCtx.createOscillator();
+    const osc2Gain = audioCtx.createGain();
+    osc2Gain.gain.linearRampToValueAtTime(0.15,now+0.07);
+    osc2.type = Osc2_Type;
+    osc2.frequency.value = midiToFreq(note+0.1);
 
-    osc1.connect(oscGain);
-    osc1Gain.connect(velocityGain);
+    // OSC3
+    const osc3 = audioCtx.createOscillator();
+    const osc3Gain = audioCtx.createGain();
+    osc3Gain.gain.linearRampToValueAtTime(0.15,now+0.07);
+    osc3.type = Osc3_Type;
+    osc3.frequency.value = midiToFreq(note-0.1);
 
-    velocityGain.connect(vca);
+    // LFO
+    const lfo = audioCtx.createOscillator();
+    const lfoGain = audioCtx.createGain();
+    lfoGain.gain.linearRampToValueAtTime(0.10,now+0.05);
+    lfo.type = "sine";
+    lfo.frequency.value = midiToFreq(note-24);
+
+    // Velocity
+    const vGainAmount = (1 / 127) * velocity;
+    const vGain = audioCtx.createGain();
+    vGain.gain.value = vGainAmount;
+
+    // Connection
+    osc1.connect(osc1Gain);
+    osc2.connect(osc2Gain);
+    osc3.connect(osc3Gain);
+    lfo.connect(lfoGain);
+
+    const mixer = audioCtx.createChannelMerger();
+
+    osc1Gain.connect(mixer,0,2);
+    osc2Gain.connect(mixer,0,0);
+    osc3Gain.connect(mixer,0,1);
+    lfoGain.connect(mixer,0,2);
+
+    mixer.connect(vGain)
+    vGain.connect(vca);
     egOn(vca.gain, atk, dec, sus);
 
-    osc1.gain = oscGain;
+    osc1.gain = osc1Gain;
+    osc2.gain = osc2Gain;
+    osc3.gain = osc3Gain;
+    lfo.gain = lfoGain;
 
-    OSC1[note.toString()] = osc;
-    console.log(OSC1);
+    OSC1[note.toString()] = osc1;
+    OSC2[note.toString()] = osc2;
+    OSC3[note.toString()] = osc3;
+    LFO[note.toString()] = lfo;
+
+    console.log("play note",OSC1,OSC2,OSC3,LFO);
+
     osc1.start();
+    osc2.start();
+    osc3.start();
+    lfo.start();
 }
 
 function isEmptyObj(obj) {
@@ -177,21 +168,55 @@ function isEmptyObj(obj) {
 }
 
 function stopNote(note,velocity) {
-    const osc = OSC1[note.toString()];
-    const oscGain = osc.gain;
-    var a = parseFloat(Release.value) + audioCtx.currentTime;
-    console.log(a);
 
-    oscGain.gain.setValueAtTime(oscGain.gain.value, audioCtx.currentTime);
-    oscGain.gain.exponentialRampToValueAtTime(0.0001, a);
+    var now = audioCtx.currentTime;
+
+    const osc1 = OSC1[note.toString()];
+    const osc1Gain = osc1.gain;
+
+    const osc2 = OSC2[note.toString()];
+    const osc2Gain = osc2.gain;
+
+    const osc3 = OSC3[note.toString()];
+    const osc3Gain = osc3.gain;
+
+    const lfo = LFO[note.toString()];
+    const lfoGain = lfo.gain;
+
+    var a = parseFloat(Release.value) + now;
+    
+    console.log("a is",a);
+
+    osc1Gain.gain.setValueAtTime(osc1Gain.gain.value, now);
+    osc1Gain.gain.exponentialRampToValueAtTime(0.0001, a);
+
+    osc2Gain.gain.setValueAtTime(osc2Gain.gain.value, now);
+    osc2Gain.gain.exponentialRampToValueAtTime(0.0001, a);
+
+    osc3Gain.gain.setValueAtTime(osc3Gain.gain.value, now);
+    osc3Gain.gain.exponentialRampToValueAtTime(0.0001, a);
+
+    lfoGain.gain.setValueAtTime(lfoGain.gain.value, now);
+    lfoGain.gain.exponentialRampToValueAtTime(0.0001, a);
+
 
     setTimeout(() => {
-        osc.stop();
-        osc.disconnect();
+        osc1.stop();
+        osc1.disconnect();
+        osc2.stop();
+        osc2.disconnect();
+        osc3.stop();
+        osc3.disconnect();
+        lfo.stop();
+        lfo.disconnect();
     }, 1000)
 
     delete OSC1[note.toString()];
-    console.log(OSC1);
+    delete OSC2[note.toString()];
+    delete OSC3[note.toString()];
+    delete LFO[note.toString()];
+    console.log("Stop Note",OSC1,OSC2,OSC3,LFO);
+    
 }
 
 

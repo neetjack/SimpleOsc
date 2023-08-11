@@ -36,13 +36,13 @@ function handelMouseinput(k, command) {
 
 ul.onmousedown = function(event) {
     var target = getEventTarget(event);
-    console.log(target.value);
+    console.log("mouse down target.value is",target.value);
     mem = target.value;
     handelMouseinput(target.value, 144);
 };
 ul.onmouseup = function(event) {
     var target = getEventTarget(event);
-    console.log(target.value);
+    console.log("mouse up target.value is",target.value);
     handelMouseinput(target.value, 128);
 };
 

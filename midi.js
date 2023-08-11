@@ -21,7 +21,7 @@ function handlemidiInput(input) {
     const command = input.data[0];
     const note = input.data[1];
     const velocity = input.data[2];
-    console.log(command);
+    console.log("command is",command);
     switch (command) {
         case 144: //noteOn
             if (velocity > 0) {
@@ -47,12 +47,12 @@ function midiToFreq(number) {
 
 
 function noteOn(note, velocity) {
-    console.log(note, velocity);
+    console.log("note ON",note, velocity);
     playNote(note, velocity);
 }
 
 function noteOff(note, velocity) {
-    console.log(note, velocity);
+    console.log("note OFF",note, velocity);
     stopNote(note, velocity);
 }
 

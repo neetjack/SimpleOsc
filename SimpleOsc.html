@@ -24,21 +24,49 @@
         <!-- DEMO SECTION-->
 
         <div id="playDemo">
+            <br>
             <button class="btn1" id="btnPlay" onclick="playDemo()">play test tone</button>
+            <br>
         </div>
 
         <!--THIS DIV CHOOSE 3 OSC TYPE-->
 
-        <div class="OSC_Type_Selector">
+        <div class="oscType">
             <form>
-                <input type="radio" id="Sine" name="selectWave" value="sine" onclick="setOscSine()">
+                <p>OSC1</p>
+                <input type="radio" id="Sine" name="selectWave" value="sine" onclick="setOsc1Sine()">
                 <label for="Sine">Sine</label>
-                <input type="radio" id="Square" name="selectWave" value="square" onclick="setOscSquare()">
+                <input type="radio" id="Square" name="selectWave" value="square" onclick="setOsc1Square()">
                 <label for="Square">Square</label>
-                <input type="radio" id="Sawtooth" name="selectWave" value="sawtooth" onclick="setOscSawtooth()">
+                <input type="radio" id="Sawtooth" name="selectWave" value="sawtooth" onclick="setOsc1Sawtooth()">
                 <label for="Sawtooth">Sawtooth</label>
-                <input type="radio" id="Triangle" name="selectWave" value="triangle" onclick="setOscTriangle()">
+                <input type="radio" id="Triangle" name="selectWave" value="triangle" onclick="setOsc1Triangle()">
                 <label for="Triangle">Triangle</label>
+                <br>
+            </form>
+            <form>   
+                <p>OSC2</p>
+                <input type="radio" id="Sine" name="selectWave" value="sine" onclick="setOsc2Sine()">
+                <label for="Sine">Sine</label>
+                <input type="radio" id="Square" name="selectWave" value="square" onclick="setOsc2Square()">
+                <label for="Square">Square</label>
+                <input type="radio" id="Sawtooth" name="selectWave" value="sawtooth" onclick="setOsc2Sawtooth()">
+                <label for="Sawtooth">Sawtooth</label>
+                <input type="radio" id="Triangle" name="selectWave" value="triangle" onclick="setOsc2Triangle()">
+                <label for="Triangle">Triangle</label>
+                <br>
+            </form>
+            <form>   
+                <p>OSC3</p>
+                <input type="radio" id="Sine" name="selectWave" value="sine" onclick="setOsc3Sine()">
+                <label for="Sine">Sine</label>
+                <input type="radio" id="Square" name="selectWave" value="square" onclick="setOsc3Square()">
+                <label for="Square">Square</label>
+                <input type="radio" id="Sawtooth" name="selectWave" value="sawtooth" onclick="setOsc3Sawtooth()">
+                <label for="Sawtooth">Sawtooth</label>
+                <input type="radio" id="Triangle" name="selectWave" value="triangle" onclick="setOsc3Triangle()">
+                <label for="Triangle">Triangle</label>
+                <br>
             </form>
         </div>
 
@@ -108,6 +136,7 @@
         </div>
     </div>
     <script src="synth.js"></script>
+    <script src="osctype.js"></script>
     <script src="midi.js"></script>
     <script src="qwert.js"></script>
     <script src="envelope.js"></script>
