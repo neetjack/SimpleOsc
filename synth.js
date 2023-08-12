@@ -7,6 +7,31 @@ var audioCtx = new AudioContext({
 });
 var ST = audioCtx.destination;
 
+//DETUNE
+var detuneAmont = 0.01;
+var detune = document.querySelector('.Detune_Fader');
+detune.oninput = function(){
+    changeDetune(detune.value);
+}
+function changeDetune(val){
+    detuneAmont = val;
+    detuneDisplay.innerHTML = val;
+}
+
+//Channel mixer
+function mix(node1,node2,node3,ratio){
+    let m = audioCtx.createChannelMerger(2);
+    let s = audioCtx.createChannelSplitter(2);
+    let r = audioCtx.createGain();
+    node1.connect(s);
+    s.connect(m);
+    s.connect(node2);
+    node2.connect(r);
+    r.value = ratio;
+    r.connect(m);
+    m.connect(node3);
+}
+
 //Neet Jack 2023
 
 const OSC1 = {};
@@ -23,7 +48,8 @@ var LFO_Type  = 'sine';
 
 //Master
 var masterGain = audioCtx.createGain();
-masterGain.gain.value = 0.4;
+masterGain.gain.value = 0.2;
+
 var master = document.querySelector('.masterGain');
 master.oninput = function() {
     changeMaster(master.value);
@@ -94,34 +120,41 @@ masterGain.connect(ST);
 function playNote(note, velocity) {
   
     var now = audioCtx.currentTime;
+    let nt = Number(note);
+    let dt = Number(detuneAmont);
 
     // OSC1
     const osc1 = audioCtx.createOscillator();
     const osc1Gain = audioCtx.createGain();
-    osc1Gain.gain.linearRampToValueAtTime(0.15,now+0.07);
+    osc1Gain.gain.value = 0.5;
     osc1.type = Osc1_Type;
-    osc1.frequency.value = midiToFreq(note);
+    osc1.frequency.value = midiToFreq(nt);
+    
 
     // OSC2
     const osc2 = audioCtx.createOscillator();
     const osc2Gain = audioCtx.createGain();
-    osc2Gain.gain.linearRampToValueAtTime(0.15,now+0.07);
+    osc2Gain.gain.value = 0.5;
     osc2.type = Osc2_Type;
-    osc2.frequency.value = midiToFreq(note+0.1);
+    osc2.frequency.value = midiToFreq(nt);
+    osc2.detune.value = dt*100;
+    console.log("detune " + osc2.detune.value);
+    
 
     // OSC3
     const osc3 = audioCtx.createOscillator();
     const osc3Gain = audioCtx.createGain();
-    osc3Gain.gain.linearRampToValueAtTime(0.15,now+0.07);
+    osc3Gain.gain.value = 0.5;
     osc3.type = Osc3_Type;
-    osc3.frequency.value = midiToFreq(note-0.1);
+    osc3.frequency.value = midiToFreq(nt);
+    osc3.detune.value = -dt*100;
 
     // LFO
     const lfo = audioCtx.createOscillator();
     const lfoGain = audioCtx.createGain();
-    lfoGain.gain.linearRampToValueAtTime(0.10,now+0.05);
+    lfoGain.gain.exponentialRampToValueAtTime(0.1,now+0.01);
     lfo.type = "sine";
-    lfo.frequency.value = midiToFreq(note-24);
+    lfo.frequency.value = midiToFreq(nt-24);
 
     // Velocity
     const vGainAmount = (1 / 127) * velocity;
@@ -135,13 +168,17 @@ function playNote(note, velocity) {
     lfo.connect(lfoGain);
 
     const mixer = audioCtx.createChannelMerger();
+    
+    const mixerGain = audioCtx.createGain();
+    mixerGain.gain.value = 0.5;
 
     osc1Gain.connect(mixer,0,2);
     osc2Gain.connect(mixer,0,0);
     osc3Gain.connect(mixer,0,1);
     lfoGain.connect(mixer,0,2);
 
-    mixer.connect(vGain)
+    mixer.connect(mixerGain);
+    mixerGain.connect(vGain,1,0);
     vGain.connect(vca);
     egOn(vca.gain, atk, dec, sus);
 
