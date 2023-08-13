@@ -7,8 +7,21 @@ var audioCtx = new AudioContext({
 });
 var ST = audioCtx.destination;
 
+let ReverbState = false;
+function flip(){
+    ReverbState = !ReverbState;
+    
+    if (ReverbState == false){
+        let text = document.getElementById("btnREV").innerHTML = "REVERB ON";
+    } else{
+        let text = document.getElementById("btnREV").innerHTML = "REVERB OFF";
+    }
+    console.log("reverb "+ReverbState);
+}
+
+
 //DETUNE
-var detuneAmont = 0.01;
+var detuneAmont = 0.1;
 var detune = document.querySelector('.Detune_Fader');
 detune.oninput = function(){
     changeDetune(detune.value);
@@ -39,10 +52,10 @@ const OSC2 = {};
 const OSC3 = {};
 const LFO  = {};
 
-var Osc1_Type = 'sine';
-var Osc2_Type = 'sine';
-var Osc3_Type = 'sine';
-var LFO_Type  = 'sine';
+var Osc1_Type = 'sawtooth';
+var Osc2_Type = 'sawtooth';
+var Osc3_Type = 'sawtooth';
+var LFO_Type  = 'triangle';
 
 //LOW PASS FILTER
 
@@ -178,8 +191,14 @@ function playNote(note, velocity) {
     lfoGain.connect(mixer,0,2);
 
     mixer.connect(mixerGain);
-    mixerGain.connect(vGain,1,0);
-    vGain.connect(vca);
+    mixerGain.connect(vGain);
+
+    if (ReverbState == false){
+        vGain.connect(vca);
+    } else{
+        reverb(vGain,vca,0.7);
+    }  
+    
     egOn(vca.gain, atk, dec, sus);
 
     osc1.gain = osc1Gain;

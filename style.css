@@ -134,7 +134,7 @@ h6 {
     cursor: pointer;
 }
 
-#playDemo {
+#BTN {
     position: relative;
     display: flex;
     justify-content: center;
