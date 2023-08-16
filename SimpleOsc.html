@@ -75,6 +75,16 @@
                 <label for="Triangle">Triangle</label>
                 <br>
             </form>
+            <form>   
+                <p>Filter</p>
+                <input type="radio" id="Sine" name="selectWave" value="lowpass" onclick="setF1LP()">
+                <label for="Sine">Lowpass</label>
+                <input type="radio" id="Square" name="selectWave" value="highpass" onclick="setF1HP()">
+                <label for="Square">Highpass</label>
+                <input type="radio" id="Sawtooth" name="selectWave" value="peaking" onclick="setF1Bell()">
+                <label for="Sawtooth">Bell</label>
+                <br>
+            </form>
         </div>
 
         <div class="Mixer">
@@ -89,6 +99,13 @@
             <p>Osc2-Osc3 DETUNE</p>
             <p><span id='detuneDisplay'>0.1</span></p>
             <input class='Detune_Fader' type="range" min="0" max="12" step="0.01" value="0.1">
+        </div>
+
+        <div class="Div_filter">
+            <hr>
+            <p>Filter Freq</p>
+            <p><span id='filter1Display'>10000</span></p>
+            <input class='Filter1_Fader' type="range" min="0" max="20000" step="1" value="10000">
         </div>
         <hr>
 
@@ -159,6 +176,8 @@
     <script src="playtone.js"></script>
     <script src="keyboard.js"></script>
     <script src="reverb.js"></script>
+    <script src="filter.js"></script>
+    <script src="uitility.js"></script>
     <div>
         <p id="end"></p>
     </div>

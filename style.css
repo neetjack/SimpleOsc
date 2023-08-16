@@ -47,12 +47,14 @@ h6 {
 
 /*masterGain slider*/
 .Mixer,
-.Div_detune{
+.Div_detune,
+.Div_filter{
     text-align: center;
 }
 
 .masterGain,
-.Detune_Fader {
+.Detune_Fader,
+.Filter1_Fader {
     -webkit-appearance: none;
     -moz-appearance: none;
     appearance: none;

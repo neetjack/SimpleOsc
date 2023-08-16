@@ -1,12 +1,13 @@
 //Create AUDIO CTX
-
-var AudioContext = window.AudioContext || window.webkittAudioContext;
-var audioCtx = new AudioContext({
+//Neet Jack 2023
+let AudioContext = window.AudioContext || window.webkittAudioContext;
+let audioCtx = new AudioContext({
     latencyHint: 'balanced',
     sampleRate: 48000,
 });
-var ST = audioCtx.destination;
+let ST = audioCtx.destination;
 
+// Reverb Switch
 let ReverbState = false;
 function flip(){
     ReverbState = !ReverbState;
@@ -21,8 +22,8 @@ function flip(){
 
 
 //DETUNE
-var detuneAmont = 0.1;
-var detune = document.querySelector('.Detune_Fader');
+let detuneAmont = 0.1;
+let detune = document.querySelector('.Detune_Fader');
 detune.oninput = function(){
     changeDetune(detune.value);
 }
@@ -31,39 +32,22 @@ function changeDetune(val){
     detuneDisplay.innerHTML = val;
 }
 
-//Channel mixer
-function mix(node1,node2,node3,ratio){
-    let m = audioCtx.createChannelMerger(2);
-    let s = audioCtx.createChannelSplitter(2);
-    let r = audioCtx.createGain();
-    node1.connect(s);
-    s.connect(m);
-    s.connect(node2);
-    node2.connect(r);
-    r.value = ratio;
-    r.connect(m);
-    m.connect(node3);
-}
-
-//Neet Jack 2023
-
+//Create OSC
 const OSC1 = {};
 const OSC2 = {};
 const OSC3 = {};
 const LFO  = {};
 
-var Osc1_Type = 'sawtooth';
-var Osc2_Type = 'sawtooth';
-var Osc3_Type = 'sawtooth';
-var LFO_Type  = 'triangle';
-
-//LOW PASS FILTER
+let Osc1_Type = 'sawtooth';
+let Osc2_Type = 'sawtooth';
+let Osc3_Type = 'sawtooth';
+let LFO_Type  = 'triangle';
 
 //Master
-var masterGain = audioCtx.createGain();
+let masterGain = audioCtx.createGain();
 masterGain.gain.value = 0.2;
 
-var master = document.querySelector('.masterGain');
+let master = document.querySelector('.masterGain');
 master.oninput = function() {
     changeMaster(master.value);
 }
@@ -73,18 +57,26 @@ function changeMaster(vol) {
     document.getElementById("mgDisplay").innerHTML = vol;
     console.log('MasterGain is' + ' ' + masterGain.gain.value);
 }
-masterGain.connect(ST);
+
+// create filter1
+let Filter1 = audioCtx.createBiquadFilter();
+Filter1.frequency.value = 10000;
+Filter1.Q.value = 1;
+Filter1.gain.value = 0;
+
+masterGain.connect(Filter1);
+Filter1.connect(ST);
 
 /*
 
-var Osc1_Gain  = audioCtx.createGain();
+let Osc1_Gain  = audioCtx.createGain();
 Osc1_Gain.gain.value  = 0.4;
-var Osc2_Gain  = audioCtx.createGain();
+let Osc2_Gain  = audioCtx.createGain();
 Osc2_Gain.gain.value  = 0.4;
-var Osc3_Gain  = audioCtx.createGain();
+let Osc3_Gain  = audioCtx.createGain();
 Osc3_Gain.gain.value  = 0.4;
 
-var Gain_1 = document.querySelector('.Gain_1')
+let Gain_1 = document.querySelector('.Gain_1')
 Gain_1.oninput = function(){
     changeMaster(Gain_1.value);
 }
@@ -95,7 +87,7 @@ function change_Gain_1(vol){
     console.log('Gain_1 is' + ' ' + Osc1_Gain.gain.value);
 }
 
-var Gain_2 = document.querySelector('.Gain_2')
+let Gain_2 = document.querySelector('.Gain_2')
 Gain_2.oninput = function(){
     changeMaster(Gain_2.value);
 }
@@ -106,7 +98,7 @@ function change_Gain_2(vol){
     console.log('Gain_2 is' + ' ' + Osc2_Gain.gain.value);
 }
 
-var Gain_3 = document.querySelector('.Gain_3')
+let Gain_3 = document.querySelector('.Gain_3')
 Gain_3.oninput = function(){
     changeMaster(Gain_2.value);
 }
@@ -132,7 +124,7 @@ masterGain.connect(ST);
 //NOTE STATE
 function playNote(note, velocity) {
   
-    var now = audioCtx.currentTime;
+    let now = audioCtx.currentTime;
     let nt = Number(note);
     let dt = Number(detuneAmont);
 
@@ -196,7 +188,7 @@ function playNote(note, velocity) {
     if (ReverbState == false){
         vGain.connect(vca);
     } else{
-        reverb(vGain,vca,0.7);
+        reverb(vGain,vca,-0.5);
     }  
     
     egOn(vca.gain, atk, dec, sus);
@@ -223,9 +215,10 @@ function isEmptyObj(obj) {
     return Object.keys(obj).length === 0;
 }
 
+//STOP NOTE
 function stopNote(note,velocity) {
 
-    var now = audioCtx.currentTime;
+    let now = audioCtx.currentTime;
 
     const osc1 = OSC1[note.toString()];
     const osc1Gain = osc1.gain;
@@ -239,7 +232,7 @@ function stopNote(note,velocity) {
     const lfo = LFO[note.toString()];
     const lfoGain = lfo.gain;
 
-    var a = parseFloat(Release.value) + now;
+    let a = parseFloat(Release.value) + now;
     
     console.log("a is",a);
 
@@ -275,8 +268,6 @@ function stopNote(note,velocity) {
     
 }
 
-
-//Pitch control
 
 
 //LOG

@@ -1,5 +1,5 @@
 //make midi in browser
-//Neet Jack 2021
+//Neet Jack 2023
 //midi check
 
 if (navigator.requestMIDIAccess) {

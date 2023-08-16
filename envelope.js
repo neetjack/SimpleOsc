@@ -1,25 +1,25 @@
 //ALL ABOUT ENVELOPE
 
-var vca = audioCtx.createGain();
-var atk = 0;
-var dec = rel = 0.1
-var sus = 1;
+let vca = audioCtx.createGain();
+let atk = 0;
+let dec = rel = 0.1
+let sus = 1;
 vca.gain.value = 0
 
 
 vca.connect(masterGain)
 
-var activeKeys = {};
+let activeKeys = {};
 
-var Attack = document.querySelector('.egsAtk');
-var Decay = document.querySelector('.egsDec');
-var Sustain = document.querySelector('.egsSus');
-var Release = document.querySelector('.egsRel');
+let Attack = document.querySelector('.egsAtk');
+let Decay = document.querySelector('.egsDec');
+let Sustain = document.querySelector('.egsSus');
+let Release = document.querySelector('.egsRel');
 
-var atkDisplay = document.querySelector('.atkDisplay');
-var decDisplay = document.querySelector('.decDisplay');
-var susDisplay = document.querySelector('.susDisplay');
-var relDisplay = document.querySelector('.relDisplay');
+let atkDisplay = document.querySelector('.atkDisplay');
+let decDisplay = document.querySelector('.decDisplay');
+let susDisplay = document.querySelector('.susDisplay');
+let relDisplay = document.querySelector('.relDisplay');
 
 //Envelope Generator Input
 Attack.oninput = function() {
@@ -58,7 +58,7 @@ function changeRelease(val) {
 //Envelope Generator Function
 
 function egOn(vcaGain, atk, dec, sus) {
-    var now = audioCtx.currentTime;
+    let now = audioCtx.currentTime;
     vcaGain.cancelScheduledValues(0);
     vcaGain.setValueAtTime(0, now);
     vcaGain.linearRampToValueAtTime(1, now + atk);
