@@ -20,18 +20,6 @@ function flip(){
     console.log("reverb "+ReverbState);
 }
 
-
-//DETUNE
-let detuneAmont = 0.1;
-let detune = document.querySelector('.Detune_Fader');
-detune.oninput = function(){
-    changeDetune(detune.value);
-}
-function changeDetune(val){
-    detuneAmont = val;
-    detuneDisplay.innerHTML = val;
-}
-
 //Create OSC
 const OSC1 = {};
 const OSC2 = {};
@@ -42,6 +30,17 @@ let Osc1_Type = 'sawtooth';
 let Osc2_Type = 'sawtooth';
 let Osc3_Type = 'sawtooth';
 let LFO_Type  = 'triangle';
+        
+//DETUNE
+let detuneAmont = 0.1;
+let detune = document.querySelector('.Detune_Fader');
+    detune.oninput = function(){
+    changeDetune(detune.value);
+    }
+function changeDetune(val){
+     detuneAmont = val;
+    detuneDisplay.innerHTML = val;
+}
 
 //Master
 let masterGain = audioCtx.createGain();
@@ -61,11 +60,47 @@ function changeMaster(vol) {
 // create filter1
 let Filter1 = audioCtx.createBiquadFilter();
 Filter1.frequency.value = 10000;
-Filter1.Q.value = 1;
+Filter1.Q.value = 10;
 Filter1.gain.value = 0;
 
+// Analyzer
+// Get HTML
+const visualizer = document.getElementById('visualizer');
+const canvas = document.getElementById('canvas1');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight; 
+
+const ctx = canvas.getContext('2d');
+
+let analyzer = audioCtx.createAnalyser();
+analyzer.fftSize = 128;
+// analyzer.frequencyBinCount half fft
+const bufferLength = analyzer.frequencyBinCount;
+const dataArray = new Uint8Array(bufferLength);
+
+// Canvas
+const barWidth = canvas.width/bufferLength;
+let barHeight;
+let xbar;
+
+function animateBar(){
+    xbar = 0;
+    ctx.clearRect(0,0, canvas.width, canvas.height);
+    analyzer.getByteFrequencyData(dataArray);
+    for (let i = 0; i< bufferLength; i++){
+        barHeight = dataArray[i] * 4;
+        ctx.fillStyle = "red";
+        ctx.fillRect(xbar, canvas.height - barHeight, barWidth, barHeight);
+        xbar += barWidth;
+    }
+    requestAnimationFrame(animateBar);
+}
+animateBar();
+
+// Connect
 masterGain.connect(Filter1);
-Filter1.connect(ST);
+Filter1.connect(analyzer);
+analyzer.connect(ST);
 
 /*
 

@@ -39,6 +39,7 @@
         <!--THIS DIV CHOOSE 3 OSC TYPE-->
 
         <div class="oscType">
+            
             <form>
                 <p>OSC1</p>
                 <input type="radio" id="Sine" name="selectWave" value="sine" onclick="setOsc1Sine()">
@@ -85,6 +86,7 @@
                 <label for="Sawtooth">Bell</label>
                 <br>
             </form>
+            <canvas id="canvas1"></canvas>
         </div>
 
         <div class="Mixer">
@@ -166,13 +168,17 @@
                 <li class="white e3" value="100"></li>
             </ul>
         </div>
+
+        <div id="visualizer">
+            
+
+        </div>
     </div>
     <script src="synth.js"></script>
     <script src="osctype.js"></script>
     <script src="midi.js"></script>
     <script src="qwert.js"></script>
     <script src="envelope.js"></script>
-    <script src="oscilloscope.js"></script>
     <script src="playtone.js"></script>
     <script src="keyboard.js"></script>
     <script src="reverb.js"></script>

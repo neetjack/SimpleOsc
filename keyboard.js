@@ -21,9 +21,11 @@ function handelMouseinput(k, command) {
     switch (command) {
         case 144:
             noteOn(note, 127);
+
             setTimeout(() => {
                 noteOff(note);
             }, 1000)
+
             break;
         case 128: //noteOff
             noteOff(note);
