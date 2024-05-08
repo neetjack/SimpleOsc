@@ -88,7 +88,7 @@ function animateBar(){
     ctx.clearRect(0,0, canvas.width, canvas.height);
     analyzer.getByteFrequencyData(dataArray);
     for (let i = 0; i< bufferLength; i++){
-        barHeight = dataArray[i] * 4;
+        barHeight = dataArray[i];
         ctx.fillStyle = "red";
         ctx.fillRect(xbar, canvas.height - barHeight, barWidth, barHeight);
         xbar += barWidth;

@@ -64,3 +64,9 @@ function egOn(vcaGain, atk, dec, sus) {
     vcaGain.linearRampToValueAtTime(1, now + atk);
     vcaGain.linearRampToValueAtTime(sus, now + atk + dec);
 }
+
+function createVCA(node1, node2, vcaGain, atk, dec, sus){
+
+    
+
+}

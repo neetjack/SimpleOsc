@@ -21,7 +21,7 @@ function handlemidiInput(input) {
     const command = input.data[0];
     const note = input.data[1];
     const velocity = input.data[2];
-    console.log("command is",command);
+    console.log("command is ", command);
     switch (command) {
         case 144: //noteOn
             if (velocity > 0) {

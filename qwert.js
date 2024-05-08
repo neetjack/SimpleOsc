@@ -69,6 +69,8 @@ function handelKeyinput(k, command) {
     data[1] = note;
     data[2] = 127;
 
+    console.log('data' , data);
+
     if (command === 144) {
         checker[note] = true;
     } else {
